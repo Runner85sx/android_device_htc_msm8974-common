@@ -13,8 +13,6 @@ LOCAL_CERTIFICATE := platform
 
 LOCAL_PRIVATE_PLATFORM_APIS := true
 
-LOCAL_PROGUARD_FLAG_FILES := proguard.flags
-
 include $(BUILD_PACKAGE)
 
 include $(call all-makefiles-under,$(LOCAL_PATH))
