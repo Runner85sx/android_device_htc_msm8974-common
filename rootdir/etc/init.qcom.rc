@@ -30,12 +30,6 @@ import /vendor/etc/init/hw/init.qcom.usb.rc
 import /vendor/etc/init/hw/init.target.rc
 
 on early-init
-    symlink /data/tombstones /tombstones
-
-    mkdir /firmware 0771 system system
-    mkdir /firmware/adsp 0771 system system
-    mkdir /firmware/radio 0771 system system
-
     mount debugfs debugfs /sys/kernel/debug
     chmod 0755 /sys/kernel/debug
 
@@ -45,11 +39,6 @@ on early-init
 
 on init
     export LD_PRELOAD "liblog_htc.so"
-
-    # Set permissions for persist partition
-    mkdir /persist 0771 system system
-
-    symlink /sdcard /storage/sdcard0
 
     # ZRAM setup
     write /sys/block/zram0/comp_algorithm lz4
@@ -246,11 +235,12 @@ service adsprpcd /vendor/bin/adsprpcd
     user media
     group media
 
-service hciattach /vendor/bin/hci_qcomm_init -e
+service hciattach /vendor/bin/init.qcom.bt.sh
     class late_start
     user bluetooth
     group bluetooth net_bt_admin
     disabled
+    seclabel u:r:bluetooth_loader:s0
     oneshot
 
 service hvdcp /vendor/bin/hvdcp
@@ -316,12 +306,11 @@ service wcnss-service /vendor/bin/wcnss_service
     oneshot
 
 ## Properties start here
-on property:bluetooth.hciattach=true
+on property:vendor.bluetooth.hciattach=true
     start hciattach
-    setprop bluetooth.status on
 
-on property:bluetooth.hciattach=false
-    setprop bluetooth.status off
+on property:vendor.bluetooth.hciattach=false
+    setprop vendor.bluetooth.status off
 
 on property:init.svc.bootanim=stopped
     # Overwrite ActivityManager's low memory killer settings
