@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2015-2016 The CyanogenMod Project
-#               2017-2018 The LineageOS Project
+#               2017-2019 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -101,6 +101,9 @@ ifeq ($(HOST_OS),linux)
     endif
   endif
 endif
+
+# Encryption
+TARGET_KEYMASTER_SKIP_WAITING_FOR_QSEE := true
 
 # Extended filesystem support
 TARGET_EXFAT_DRIVER := sdfat
